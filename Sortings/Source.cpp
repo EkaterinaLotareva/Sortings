@@ -4,13 +4,24 @@
 #include <fstream>
 using namespace std;
 
+
 int* random(int n) {
 	srand(200);
 	int* arr = new int[n];
 	for (int i = 0; i < n; i++) {
 		arr[i] = rand();
 	};
-	return arr;
+	auto array = arr;
+	delete[] arr;
+	arr = nullptr;
+	return array;
+}
+
+void array_output(int array[], int n) {
+	for (int i = 0; i < n; i++) {
+		cout << array[i] << " ";
+	}
+	cout << endl;
 }
 
 bool forward_step(int array[], int min, int max) {
@@ -78,8 +89,37 @@ bool testing_backward_step() {
 
 bool testing_shaker() {
 	for (int i = 10; i <= 100; i += 10) {
-
+		auto arr = shaker(random(i), i);
+		for (int j = 0; j < i-1; j++) {
+			if (arr[j] > arr[j + 1]) {
+				return false;
+			}
+		}
 	}
+	return true;
+}
+
+bool long_step(int array[], int n, int i) {
+	for (int j = 0; i + j < n; j += i) {
+		if (array[j] > array[j + i]) {
+			auto t = array[j];
+			array[j] = array[j + i];
+			array[j + i] = t;
+			return false;
+		}
+	}
+	return true;
+}
+
+int* comb_sort(int array[], int n) {
+	bool sorted = false;
+	while (!sorted) {
+		for (int i = n - 1; i > 1; i--) {
+			long_step(array, n, i);
+			sorted = long_step(array, n, i);
+		}
+	}
+	return array;
 }
 
 void writing_to_file(string s) {
@@ -91,7 +131,19 @@ void writing_to_file(string s) {
 	ofs.close();
 }
 
+void separate_atring() {
+	std::ofstream ofs;
+	ofs.open("C:\\c_projects\\Asymptotic complexity of algorithms\\data.txt", std::ofstream::out | std::ofstream::app);
+
+	ofs << endl;
+
+	ofs.close();
+}
+
 int main() {
+	cout << testing_forward_step() << testing_backward_step() << testing_shaker() << endl;
+	int a[] = {3, 2, 1 };
+	array_output(comb_sort(a, 3), 3);
 
 	return 0;
 }
