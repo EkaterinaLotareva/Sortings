@@ -4,8 +4,9 @@
 #include <fstream>
 #include <cmath>
 using namespace std;
-int const N = 100000;
+int const N = 10000;
 int ARRAY[N];
+int const M = 100;
 
 int* random(int n) {
 	srand(200);
@@ -24,6 +25,17 @@ void array_output(int array[], int n) {
 		cout << array[i] << " ";
 	}
 	cout << endl;
+}
+
+int* copy_array(int array[], int n) {
+	auto arr = new int[n];
+	for (int i = 0; i < n; i++) {
+		arr[i] = array[i];
+	}
+	auto a = arr;
+	delete[] arr;
+	arr = nullptr;
+	return a;
 }
 
 bool forward_step(int array[], int min, int max) {
@@ -52,7 +64,8 @@ bool backward_step(int array[], int min, int max) {
 	return true;
 }
 
-int *shaker(int array[], int n) {
+
+int *shaker_sort(int array[], int n) {
 	bool sorted = false;
 	int min = 0;
 	int max = n - 1;
@@ -91,7 +104,7 @@ bool testing_backward_step() {
 
 bool testing_shaker() {
 	for (int i = 10; i <= 100; i += 10) {
-		auto arr = shaker(random(i), i);
+		auto arr = shaker_sort(random(i), i);
 		for (int j = 0; j < i-1; j++) {
 			if (arr[j] > arr[j + 1]) {
 				return false;
@@ -142,6 +155,7 @@ int* shell_sort_2(int array[], int n) {
 		sort_step(array, n, step);
 		step = step / 2;
 	}
+	return array;
 }
 
 int fibonacci_sequence(int max) {
@@ -173,6 +187,7 @@ int* shell_sort_hibbard(int array[], int n) {
 		m--;
 		step = ARRAY[m];
 	}
+	return array;
 }
 
 int* shell_sort_fibonacci(int array[], int n) {
@@ -184,9 +199,10 @@ int* shell_sort_fibonacci(int array[], int n) {
 		m--;
 		step = ARRAY[m];
 	}
+	return array;
 }
 
-void writing_to_file(string s) {
+void writing_to_file(int s) {
 	std::ofstream ofs;
 	ofs.open("C:\\c_projects\\Sortings\\data.txt", std::ofstream::out | std::ofstream::app);
 
@@ -195,7 +211,7 @@ void writing_to_file(string s) {
 	ofs.close();
 }
 
-void separate_atring() {
+void separate_string() {
 	std::ofstream ofs;
 	ofs.open("C:\\c_projects\\Sortings\\data.txt", std::ofstream::out | std::ofstream::app);
 
@@ -204,18 +220,103 @@ void separate_atring() {
 	ofs.close();
 }
 
-void time_comb_sort() {
+void time_shaker_sort() {
+	std::ofstream ofs;
+	ofs.open("C:\\c_projects\\Sortings\\data.txt", std::ofstream::out | std::ofstream::app);
+	for (int i = 10; i <= 10000; i += 100) {
+		auto array = random(i);
+		auto begin = chrono::steady_clock::now();
+		for (int j = 0; j <= 100; j++) {
+			auto A = copy_array(array, i);
+			shaker_sort(A, i);
+		}
+		auto end = chrono::steady_clock::now();
+		auto time_span =
+			chrono::duration_cast<chrono::microseconds>(end - begin);
+		ofs << time_span.count() << ",";
+	}
+	ofs.close();
+}
 
+void time_comb_sort() {
+	std::ofstream ofs;
+	ofs.open("C:\\c_projects\\Sortings\\data.txt", std::ofstream::out | std::ofstream::app);
+	for (int i = 10; i <= 10000; i += 100) {
+		auto array = random(i);
+		auto begin = chrono::steady_clock::now();
+		for (int j = 0; j <= 10; j++) {
+			auto A = copy_array(array, i);
+			comb_sort(A, i);
+		}
+		auto end = chrono::steady_clock::now();
+		auto time_span =
+			chrono::duration_cast<chrono::microseconds>(end - begin);
+		ofs << time_span.count() << ",";
+	}
+	ofs.close();
 }
 
 void transpositions_comb_sort() {
 
 }
 
+void time_shell_sort_2() {
+	std::ofstream ofs;
+	ofs.open("C:\\c_projects\\Sortings\\data.txt", std::ofstream::out | std::ofstream::app);
+	for (int i = M; i <= N; i += M) {
+		auto array = random(i);
+		auto begin = chrono::steady_clock::now();
+		for (int j = 0; j <= 10; j++) {
+			auto A = copy_array(array, i);
+			shell_sort_2(A, i);
+		}
+		auto end = chrono::steady_clock::now();
+		auto time_span =
+			chrono::duration_cast<chrono::milliseconds>(end - begin);
+		ofs << time_span.count() << ",";
+	}
+	ofs.close();
+}
+
+void time_shell_sort_hibbard() {
+	std::ofstream ofs;
+	ofs.open("C:\\c_projects\\Sortings\\data.txt", std::ofstream::out | std::ofstream::app);
+	for (int i = M; i <= N; i += M) {
+		auto array = random(i);
+		auto begin = chrono::steady_clock::now();
+		for (int j = 0; j <= 10; j++) {
+			auto A = copy_array(array, i);
+			shell_sort_hibbard(A, i);
+		}
+		auto end = chrono::steady_clock::now();
+		auto time_span =
+			chrono::duration_cast<chrono::milliseconds>(end - begin);
+		ofs << time_span.count() << ",";
+	}
+	ofs.close();
+}
+
+void time_shell_sort_fibonacci() {
+	std::ofstream ofs;
+	ofs.open("C:\\c_projects\\Sortings\\data.txt", std::ofstream::out | std::ofstream::app);
+	for (int i = M; i <= N; i += M) {
+		auto array = random(i);
+		auto begin = chrono::steady_clock::now();
+		for (int j = 0; j <= 100; j++) {
+			auto A = copy_array(array, i);
+			shell_sort_fibonacci(A, i);
+		}
+		auto end = chrono::steady_clock::now();
+		auto time_span =
+			chrono::duration_cast<chrono::milliseconds>(end - begin);
+		ofs << time_span.count() << ",";
+	}
+	ofs.close();
+}
 
 
 int main() {
 	cout << testing_forward_step() << testing_backward_step() << testing_shaker();
-
+	time_shell_sort_2();
 	return 0;
 }
