@@ -2,6 +2,7 @@
 #include <chrono>
 #include <random>
 #include <fstream>
+#include <cmath>
 using namespace std;
 int const N = 100000;
 int ARRAY[N];
@@ -149,26 +150,40 @@ int fibonacci_sequence(int max) {
 	int n = 1;
 	for (int i = 0; ARRAY[i] + ARRAY[i + 1] <= max; i++) {
 		ARRAY[i + 2] = ARRAY[i] + ARRAY[i + 1];
-		n += 1;
+		n ++;
 	}
 	return n;
 }
 
 int hibbard_sequence(int max) {
-	
+	int n = -1;
+	for (int i = 1; pow(2, i) - 1 <= max; i++) {
+		ARRAY[i - 1] = pow(2, i) - 1;
+		n++;
+	}
 	return n;
 }
 
 int* shell_sort_hibbard(int array[], int n) {
-	auto step = n / 2;
+	hibbard_sequence(n);
+	int m = hibbard_sequence(n);
+	auto step = ARRAY[m];
 	while (step >= 1) {
 		sort_step(array, n, step);
-		step = step / 2;
+		m--;
+		step = ARRAY[m];
 	}
 }
 
 int* shell_sort_fibonacci(int array[], int n) {
-
+	fibonacci_sequence(n);
+	int m = fibonacci_sequence(n);
+	auto step = ARRAY[m];
+	while (step >= 1) {
+		sort_step(array, n, step);
+		m--;
+		step = ARRAY[m];
+	}
 }
 
 void writing_to_file(string s) {
